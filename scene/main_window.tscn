@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cutw1n1ayw06"]
+
+[ext_resource type="PackedScene" uid="uid://j2dvuovrso38" path="res://scene/level.tscn" id="1_jcxme"]
+
+[node name="main_window" type="Control"]
+custom_minimum_size = Vector2(160, 144)
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Node2D" parent="." instance=ExtResource("1_jcxme")]

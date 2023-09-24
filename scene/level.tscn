@@ -1,0 +1,194 @@
+[gd_scene load_steps=27 format=3 uid="uid://j2dvuovrso38"]
+
+[ext_resource type="TileSet" uid="uid://dhgxbkpm4bae0" path="res://static/tileset.tres" id="1_5j4ng"]
+[ext_resource type="Script" path="res://script/level.gd" id="1_sw5k1"]
+[ext_resource type="Script" path="res://script/state_machine.gd" id="2_5jha6"]
+[ext_resource type="Script" path="res://script/map.gd" id="2_jba27"]
+[ext_resource type="Script" path="res://script/phase_standby.gd" id="3_f27hq"]
+[ext_resource type="Script" path="res://script/hero.gd" id="3_oa17a"]
+[ext_resource type="Script" path="res://script/phase_init.gd" id="3_rm2g4"]
+[ext_resource type="Texture2D" uid="uid://b75ph2nuops7g" path="res://art/chara.png" id="3_srmcg"]
+[ext_resource type="Script" path="res://script/phase_main.gd" id="4_0y1ab"]
+[ext_resource type="Script" path="res://script/cursor.gd" id="4_14u88"]
+[ext_resource type="Script" path="res://script/phase_movement.gd" id="5_ske45"]
+[ext_resource type="Script" path="res://script/phase_battle.gd" id="6_w15t1"]
+[ext_resource type="Texture2D" uid="uid://bj46o6vvrxxum" path="res://art/cursor.png" id="7_ijf6i"]
+[ext_resource type="Script" path="res://script/phase_aftermath.gd" id="7_sbbk3"]
+[ext_resource type="Script" path="res://script/phase_gameover.gd" id="8_8uy5q"]
+[ext_resource type="Texture2D" uid="uid://gg6gytykhuf3" path="res://art/elements.png" id="14_h3rif"]
+[ext_resource type="Script" path="res://script/range.gd" id="17_ct0tb"]
+[ext_resource type="Script" path="res://script/enemy.gd" id="17_vvbpo"]
+[ext_resource type="Script" path="res://script/ai.gd" id="19_jjsml"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7kqw4"]
+atlas = ExtResource("7_ijf6i")
+region = Rect2(0, 0, 60, 20)
+
+[sub_resource type="Animation" id="Animation_vmxgh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_3a1v6"]
+resource_name = "idle"
+length = 0.6
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3, 0.45),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [1, 2, 1, 0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3vc1d"]
+_data = {
+"RESET": SubResource("Animation_vmxgh"),
+"idle": SubResource("Animation_3a1v6")
+}
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kvsrb"]
+atlas = ExtResource("14_h3rif")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yoawi"]
+atlas = ExtResource("3_srmcg")
+region = Rect2(0, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ahby"]
+atlas = ExtResource("3_srmcg")
+region = Rect2(0, 32, 64, 32)
+
+[node name="level" type="Node2D"]
+script = ExtResource("1_sw5k1")
+
+[node name="phase" type="Node" parent="."]
+script = ExtResource("2_5jha6")
+initial_state = NodePath("init")
+
+[node name="init" type="Node" parent="phase"]
+script = ExtResource("3_rm2g4")
+
+[node name="standby" type="Node" parent="phase"]
+script = ExtResource("3_f27hq")
+
+[node name="main" type="Node" parent="phase"]
+script = ExtResource("4_0y1ab")
+
+[node name="movement" type="Node" parent="phase"]
+script = ExtResource("5_ske45")
+
+[node name="battle" type="Node" parent="phase"]
+script = ExtResource("6_w15t1")
+
+[node name="aftermath" type="Node" parent="phase"]
+script = ExtResource("7_sbbk3")
+
+[node name="gamrover" type="Node" parent="phase"]
+script = ExtResource("8_8uy5q")
+
+[node name="map" type="TileMap" parent="."]
+y_sort_enabled = true
+position = Vector2(48, 32)
+tile_set = ExtResource("1_5j4ng")
+format = 2
+layer_0/name = "floor"
+layer_0/tile_data = PackedInt32Array(0, 0, 0, 65537, 0, 0, 2, 0, 0, 131074, 0, 0, 131072, 0, 0, 196609, 0, 0, 196611, 0, 0, 65539, 0, 0, 65536, 65536, 0, 1, 65536, 0, 3, 65536, 0, 65538, 65536, 0, 131073, 65536, 0, 196608, 65536, 0, 196610, 65536, 0, 131075, 65536, 0)
+layer_1/name = "range"
+layer_1/enabled = true
+layer_1/modulate = Color(1, 1, 1, 1)
+layer_1/y_sort_enabled = false
+layer_1/y_sort_origin = 0
+layer_1/z_index = 0
+layer_1/tile_data = PackedInt32Array()
+script = ExtResource("2_jba27")
+
+[node name="cursor" type="Node2D" parent="map"]
+position = Vector2(8, 8)
+script = ExtResource("4_14u88")
+speed = 100
+
+[node name="sprite" type="Sprite2D" parent="map/cursor"]
+texture = SubResource("AtlasTexture_7kqw4")
+centered = false
+offset = Vector2(-10, -10)
+hframes = 3
+
+[node name="anime" type="AnimationPlayer" parent="map/cursor"]
+autoplay = "idle"
+libraries = {
+"": SubResource("AnimationLibrary_3vc1d")
+}
+
+[node name="hero" type="Node2D" parent="map" node_paths=PackedStringArray("range")]
+y_sort_enabled = true
+position = Vector2(24, 24)
+script = ExtResource("3_oa17a")
+range = NodePath("range")
+speed = 50
+
+[node name="range" type="Node2D" parent="map/hero" node_paths=PackedStringArray("unit")]
+script = ExtResource("17_ct0tb")
+unit = NodePath("..")
+range_texture = SubResource("AtlasTexture_kvsrb")
+
+[node name="sprite" type="Sprite2D" parent="map/hero"]
+texture = SubResource("AtlasTexture_yoawi")
+centered = false
+offset = Vector2(-8, -24)
+hframes = 4
+
+[node name="anime" type="AnimationPlayer" parent="map/hero"]
+autoplay = "idle"
+libraries = {
+"": SubResource("AnimationLibrary_3vc1d")
+}
+
+[node name="enemy01" type="Node2D" parent="map" node_paths=PackedStringArray("range", "ai") groups=["enemy"]]
+y_sort_enabled = true
+position = Vector2(56, 24)
+script = ExtResource("17_vvbpo")
+range = NodePath("range")
+ai = NodePath("ai")
+speed = 50
+
+[node name="range" type="Node2D" parent="map/enemy01" node_paths=PackedStringArray("unit")]
+script = ExtResource("17_ct0tb")
+unit = NodePath("..")
+range_size = 1
+range_texture = SubResource("AtlasTexture_kvsrb")
+
+[node name="sprite" type="Sprite2D" parent="map/enemy01"]
+texture = SubResource("AtlasTexture_0ahby")
+centered = false
+offset = Vector2(-8, -24)
+hframes = 4
+
+[node name="anime" type="AnimationPlayer" parent="map/enemy01"]
+autoplay = "idle"
+libraries = {
+"": SubResource("AnimationLibrary_3vc1d")
+}
+
+[node name="ai" type="Node" parent="map/enemy01" node_paths=PackedStringArray("unit")]
+script = ExtResource("19_jjsml")
+unit = NodePath("..")
+
+[connection signal="action_submitted" from="." to="phase/main" method="_on_level_action_submitted"]
+[connection signal="movement_submitted" from="map" to="." method="_on_map_movement_submitted"]
